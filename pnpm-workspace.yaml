@@ -19,3 +19,7 @@ overrides:
   tinyexec: 1.3.0
   undici@6: 6.28.0
   undici@7: 7.29.0
+
+# Exempts ExaDev's own published packages from the org-wide minimumReleaseAge gate: ExaDev controls @exadev/*'s own release pipeline directly, so the supply-chain risk that gate exists for (a compromised third-party maintainer publishing a malicious version before the wider community catches it) doesn't apply to it. The equivalent exclude entry in pnpm's global config (`~/Library/Preferences/pnpm/rc`) is silently ignored on pnpm 11 -- confirmed directly: only pnpm-workspace.yaml's own minimumReleaseAgeExclude is actually honoured on this version.
+minimumReleaseAgeExclude:
+  - '@exadev/*'
