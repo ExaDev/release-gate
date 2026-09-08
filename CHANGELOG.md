@@ -1,0 +1,6 @@
+# 1.0.0 (2026-09-08)
+
+
+### Features
+
+* detach a semantic-release run before it publishes ([ac46fba](https://github.com/ExaDev/release-gate/commit/ac46fbaf9c4fa6d0208a58868f8966bfeb0e9fa8))
