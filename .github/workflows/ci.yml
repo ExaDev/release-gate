@@ -1,0 +1,92 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  commitlint:
+    name: Commitlint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: wagoid/commitlint-github-action@v6
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: pnpm
+      - uses: actions/cache@v6
+        with:
+          path: .eslintcache
+          # eslint.config.ts and pnpm-lock.yaml both invalidate the cache: a rule change or a dependency bump can change lint results even for files whose own content didn't change.
+          key: eslintcache-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml', 'eslint.config.ts') }}
+          restore-keys: eslintcache-${{ runner.os }}-
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - run: pnpm exec attw --pack
+
+  release:
+    name: Release
+    needs: [commitlint, lint, typecheck]
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write # to push the release commit/tag and create the GitHub Release
+      issues: write # to comment on released issues
+      pull-requests: write # to comment on released pull requests
+      id-token: write # OIDC identity for npm trusted publishing (no NPM_TOKEN)
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # semantic-release analyses the full commit history since the last release.
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: pnpm
+          # registry-url is deliberately absent -- setup-node would otherwise write an .npmrc _authToken line that wins over the OIDC token exchange, breaking trusted publishing.
+      - run: pnpm install --frozen-lockfile
+      - name: Upgrade npm for OIDC trusted publishing (needs npm CLI >=11.5.1)
+        run: npm install -g npm@latest
+      - name: Release
+        # HUSKY=0 so the commit-msg hook never fires against the automated release commit.
+        run: HUSKY=0 pnpm exec semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Blanked, not omitted -- an inherited NPM_TOKEN/NODE_AUTH_TOKEN would otherwise be used in preference to the OIDC exchange.
+          NPM_TOKEN: ''
+          NODE_AUTH_TOKEN: ''
