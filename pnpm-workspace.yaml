@@ -1,0 +1,21 @@
+# This is a single-package repo, not a real pnpm workspace -- packages is deliberately empty. Its only purpose is to give turbo a workspace root to anchor local task caching against, matching the same pattern used across ExaDev's other single-package tooling repos.
+packages: []
+
+# Pins transitive dependency versions that would otherwise resolve to the newest matching release -- kept in step with @exadev/eslint-config's own known-good resolutions so a fresh install doesn't pick up a patch release still inside the org's minimum-release-age window.
+overrides:
+  '@eslint/plugin-kit': 0.7.2
+  '@typescript-eslint/eslint-plugin': 8.67.0
+  '@typescript-eslint/parser': 8.67.0
+  '@typescript-eslint/project-service': 8.67.0
+  '@typescript-eslint/scope-manager': 8.67.0
+  '@typescript-eslint/tsconfig-utils': 8.67.0
+  '@typescript-eslint/type-utils': 8.67.0
+  '@typescript-eslint/types': 8.67.0
+  '@typescript-eslint/typescript-estree': 8.67.0
+  '@typescript-eslint/utils': 8.67.0
+  '@typescript-eslint/visitor-keys': 8.67.0
+  ast-v8-to-istanbul: 1.0.5
+  postcss: 8.5.25
+  tinyexec: 1.3.0
+  undici@6: 6.28.0
+  undici@7: 7.29.0
