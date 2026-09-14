@@ -1,6 +1,6 @@
 {
   "name": "@exadev/release-gate",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Tag and push a semantic-release release, then finish publishing it later -- from a separate process, after an external gate -- without semantic-release core supporting this natively",
   "type": "module",
   "sideEffects": false,
