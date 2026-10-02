@@ -4,6 +4,8 @@
 
 > Tag and push a semantic-release release, then finish publishing it later -- from a separate process, after an external gate -- without semantic-release core supporting this natively.
 
+[![npm downloads chart, log scale](https://shieldcn.dev/chart/npm/@exadev/release-gate.svg?bg=transparent&logo=false&yScale=log)](https://www.npmjs.com/package/@exadev/release-gate)
+
 ## Why
 
 semantic-release's own `run()` tags and pushes a release, then immediately calls every configured `publish` plugin (npm, GitHub Releases, and so on) in the same process, in the same CI job. There is no supported way to stop after the tag exists and resume publishing later, once something outside semantic-release itself -- a staging deploy, a smoke test, a manual sign-off -- has confirmed the release should actually go out. [semantic-release/semantic-release#2411](https://github.com/semantic-release/semantic-release/issues/2411) asks for exactly this, and has been raised (and declined as out of scope for core) more than once. This package is the standalone reference implementation promised in the design comment on that issue: a small, additive pair of functions -- `detachRelease` and `resumeRelease` -- built entirely on semantic-release's own internals, demonstrating the split as a real, usable thing rather than an abstract proposal.
