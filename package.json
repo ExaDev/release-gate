@@ -62,7 +62,7 @@
     "lint-staged": "17.3.0",
     "publint": "0.3.22",
     "tsdown": "0.22.14",
-    "turbo": "2.10.8",
+    "turbo": "2.11.5",
     "typescript": "6.0.3",
     "typescript-eslint": "8.67.0",
     "vitest": "4.1.10"
