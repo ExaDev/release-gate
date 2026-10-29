@@ -1,3 +1,13 @@
+## [1.0.4](https://github.com/ExaDev/release-gate/compare/v1.0.3...v1.0.4) (2026-10-29)
+
+### Bug Fixes
+
+* list every commit type in the release notes ([360bec0](https://github.com/ExaDev/release-gate/commit/360bec0167fa80e139b5b942256870afe0115fc3))
+
+### Documentation
+
+* list the commits behind each release that had an empty changelog entry ([bbbc7f0](https://github.com/ExaDev/release-gate/commit/bbbc7f08a298952098920d42c3d0d5ba1cf909d5))
+
 ## [1.0.3](https://github.com/ExaDev/release-gate/compare/v1.0.2...v1.0.3) (2026-10-06)
 
 ### Chores
